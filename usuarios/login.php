@@ -7,7 +7,7 @@
     </head>
     <body><?php
         
-            require 'comunes/auxiliar.php';
+            require '../comunes/auxiliar.php';
             
             if(isset($_POST['nick'],$_POST['pass'])):
                 $nick = trim($_POST['nick']);
