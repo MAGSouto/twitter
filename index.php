@@ -7,28 +7,32 @@ function menu_paginacion($fpp, $pag, $npags, $nenlaces)
 {
     $siguiente = $pag+1;
     $anterior = $pag-1;
-    $nenlaceslado = floor($nenlaces/2);
+    $i = $pag - $nenlaces;
+    $fin = $pag + $nenlaces;
 
     if ($pag > 1) { ?>
         <a href="<?="index.php?pag=$anterior"?>">&lt;</a><?php
     }
 
-    if ($pag - $nenlaceslado <= 0) {
+    if ($pag - $nenlaces <= 0) 
+    {
         $i = 1;
-        $fin = $nenlaces;
-    } elseif ($npags - $pag <= $nenlaceslado) {
-        $i = $npags - $nenlaces;
-        $fin = $npags;
-    } else{
-        $i = $pag-$nenlaceslado;
-        $fin = $pag+$nenlaceslado;
+        $fin = $i + $nenlaces * 2;
     }
+    
+    if ($pag + $nenlaces >= $npags) 
+    {
+        $i = $npags - $nenlaces * 2;
+        $fin = $npags;
+        $i = ($i<1) ? 1 : $npags-$nenlaces *2;
+    }
+        
 
     for ($i; $i <= $fin; $i++) {            
         if ($i == $pag) { ?>
             <?= $i ?><?php
         } else { ?>
-        <a href="index.php?pag=<?=$i?>"><?=$i?></a><?php
+            <a href="index.php?pag=<?=$i?>"><?=$i?></a><?php
         }
     }
 
@@ -48,8 +52,22 @@ function comprobar_longitud($mensaje)
 $nfilas = contar_filas('twitts');
 $fpp = 3;
 $npags = ceil($nfilas/$fpp);
-$pag = isset($_GET['pag']) ? trim($_GET['pag']) : 1;
-$nenlaces = 5;
+$nenlaces = 2;
+
+if (isset($_GET['pag']))
+{
+    $pag = trim($_GET['pag']);
+
+    if ($pag < 1 || $pag > $npags)
+    {
+        $pag = 1;
+    }
+}
+else
+{
+    $pag = 1;
+}
+
 
 if (isset($_SESSION['usuario'], $_SESSION['nick']))
 {
